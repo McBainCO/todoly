@@ -36,10 +36,14 @@ $(document).ready(function () {
     $('#table-false').empty();
     for (i = 0; i < todos.todo.length; i++) {
       $('#table-false').append('<tr>' +
-        '<td id="'+ todos.todo[i].id +'">' + todos.todo[i].name + '</td><td id="todoDelete">X</td>'  +
+        '<td id="'+ todos.todo[i].id +'">' + todos.todo[i].name + '</td><td id="todoDelete">X</td><td id="todoComplete">✓</td>'  +
         '</tr>')
     }
   };
+
+
+
+
 
   var addTodo = function () {
     var newTodo = $('#input').val();
@@ -51,15 +55,18 @@ $(document).ready(function () {
       });
     todos.superCereal++;
     drawTable();
-    flashMessage();
+    flashMessage("Todo Created");
+
   };
 
-  var flashMessage = function() {
-    $('#flash').append("<h2>Todo Created!</h2><div id='xButton'>X</div>").show();
+  var flashMessage = function(text) {
+    $('#flash').empty().append("<h2>"+ text +"</h2><div id='xButton'>X</div>").show();
     flashtimer = setTimeout(function(){
       $('#flash').empty().hide();
     }, 5000);
   };
+
+
 
   $('#create').on("click", function (e) {
     e.preventDefault();
@@ -71,12 +78,11 @@ $(document).ready(function () {
     var id = $(this).siblings().attr("id");
     for (i = 0; i < todos.todo.length; i++) {
       if(id == todos.todo[i].id){
-        console.log(todos.todo[i]);
         todos.todo.splice(i)
-
       }
     }
-    drawTable()
+    drawTable();
+    flashMessage("Todo Deleted");
   });
 
   drawTable();
