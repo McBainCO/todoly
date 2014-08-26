@@ -32,19 +32,20 @@ $(document).ready(function () {
 
   });
 
-  var drawTable = function () {
+  var drawTable = function () {z
     $('#table-false').empty();
-    for (i = 0; i < todos.todo.length; i++) {
-      $('#table-false').append('<tr>' +
-        '<td id="'+ todos.todo[i].id +'">' + todos.todo[i].name + '</td><td id="todoDelete">X</td><td id="todoComplete">✓</td>'  +
-        '</tr>')
+    $('#table-true').empty();
+      for (i = 0; i < todos.todo.length; i++) {
+        if(todos.todo[i].done == false) {
+        $('#table-false').append('<tr>' +
+          '<td id="'+ todos.todo[i].id +'">' + todos.todo[i].name + '</td><td id="todoDelete">X</td><td id="todoComplete">✓</td>'  +
+        '</tr>')}else{
+          $('#table-true').append('<tr>' +
+            '<td id="'+ todos.todo[i].id +'">' + todos.todo[i].name + '</td><td id="todoDelete">X</td><td id="todoUndo">U</td>'  +
+            '</tr>')
+        }
     }
   };
-
-
-
-
-
   var addTodo = function () {
     var newTodo = $('#input').val();
     todos.todo.push(
@@ -66,8 +67,6 @@ $(document).ready(function () {
     }, 5000);
   };
 
-
-
   $('#create').on("click", function (e) {
     e.preventDefault();
     addTodo();
@@ -84,6 +83,29 @@ $(document).ready(function () {
     drawTable();
     flashMessage("Todo Deleted");
   });
+
+  $(document).on('click', '#todoComplete', function(){
+    var id = $(this).siblings().attr("id");
+    for (i = 0; i < todos.todo.length; i++) {
+      if(id == todos.todo[i].id){
+        todos.todo[i].done = true;
+      }
+    }
+    drawTable();
+    flashMessage("Todo Completed");
+  });
+
+  $(document).on('click', '#todoUndo', function(){
+    var id = $(this).siblings().attr("id");
+    for (i = 0; i < todos.todo.length; i++) {
+      if(id == todos.todo[i].id){
+        todos.todo[i].done = false;
+      }
+    }
+    drawTable();
+    flashMessage("Still Todo");
+  });
+
 
   drawTable();
 });
