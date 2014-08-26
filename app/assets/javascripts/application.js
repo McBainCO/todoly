@@ -14,18 +14,70 @@
 //= require jquery_ujs
 //= require_tree .
 
-$(document).ready(function() {
-  var flashTimer;
+$(document).ready(function () {
+  var todos = {
+    "todo": [],
+    "superCereal": 0
+  };
 
-  $('#still-todo').append('<h2>Todo!</h2><div id="flash"></div><table id="todo-table"></table><hr>');
-  $('#done-todo').append('<h2>Completed!</h2><table id="done-table"></table>');
+  $('#todo-false').append('<h2>Todo!</h2><div id="flash"></div><table id="table-false"></table><hr>');
+  $('#todo-true').append('<h2>Completed!</h2><table id="table-true"></table>');
 
-  $(document).on("click", "#flash", function(){
-    $(this).empty().hide()
+  $(document).on("click", "#xButton", function () {
+    $('#flash').empty().hide()
   });
-  $(document).on("click", "#todoClose", function(){
+
+  $(document).on("click", "#todoClose", function () {
     $(this).empty().hide()
+
   });
 
+  var drawTable = function () {
+    $('#table-false').empty();
+    for (i = 0; i < todos.todo.length; i++) {
+      $('#table-false').append('<tr>' +
+        '<td id="'+ todos.todo[i].id +'">' + todos.todo[i].name + '</td><td id="todoDelete">X</td>'  +
+        '</tr>')
+    }
+  };
 
+  var addTodo = function () {
+    var newTodo = $('#input').val();
+    todos.todo.push(
+      {
+        "id": todos.superCereal,
+        "name": newTodo,
+        "done": false
+      });
+    todos.superCereal++;
+    drawTable();
+    flashMessage();
+  };
+
+  var flashMessage = function() {
+    $('#flash').append("<h2>Todo Created!</h2><div id='xButton'>X</div>").show();
+    flashtimer = setTimeout(function(){
+      $('#flash').empty().hide();
+    }, 5000);
+  };
+
+  $('#create').on("click", function (e) {
+    e.preventDefault();
+    addTodo();
+    $('#input').val("");
+  });
+
+  $(document).on('click', '#todoDelete', function(){
+    var id = $(this).siblings().attr("id");
+    for (i = 0; i < todos.todo.length; i++) {
+      if(id == todos.todo[i].id){
+        console.log(todos.todo[i]);
+        todos.todo.splice(i)
+
+      }
+    }
+    drawTable()
+  });
+
+  drawTable();
 });
