@@ -23,7 +23,7 @@ $(document).ready(function () {
     });
   };
 
-  $('#todo-false').append('<h2>Todo!</h2><div id="flash"></div><table id="table-false"></table><hr>');
+  $('#todo-false').append('<h2>Todo!</h2><div id="flash" class="clearfix"></div><table id="table-false"></table><hr>');
   $('#todo-true').append('<h2>Completed!</h2><table id="table-true"></table>');
 
   $(document).on("click", "#xButton", function () {
@@ -59,14 +59,14 @@ $(document).ready(function () {
       data: {name: newTodo}
     })
       .done(getTodos());
-    flashMessage("Todo Created");
+    flashMessage("Todo Created", "blue");
   };
 
-  var flashMessage = function(text) {
-    $('#flash').empty().append("<h2>"+ text +"</h2><div id='xButton'>X</div>").show();
-    flashtimer = setTimeout(function(){
-      $('#flash').empty().hide();
-    }, 5000);
+  var flashMessage = function(text, color) {
+    $('#flash').css("background-color",color).empty().append("<h2>"+ text +"</h2><div id='xButton' class='right'><h1>X</h1></div>").show();
+//    flashtimer = setTimeout(function(){
+//      $('#flash').empty().hide();
+//    }, 5000);
   };
 
   $('#create').on("click", function (e) {
@@ -83,7 +83,7 @@ $(document).ready(function () {
       data: {id: id}
     })
     .done(getTodos());
-    flashMessage("Todo Deleted");
+    flashMessage("Todo Deleted", "red");
   });
 
   $(document).on('click', '#todoComplete', function(){
@@ -94,7 +94,7 @@ $(document).ready(function () {
       data: {id: id, done: true}
     })
       .done(getTodos());
-    flashMessage("Todo Completed");
+    flashMessage("Todo Completed", "green");
   });
 
   $(document).on('click', '#todoUndo', function(){
@@ -105,7 +105,7 @@ $(document).ready(function () {
       data: {id: id, done: false}
     })
       .done(getTodos());
-    flashMessage("Still Todo");
+    flashMessage("Still Todo", "blue");
   });
 
   getTodos()

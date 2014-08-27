@@ -13,3 +13,35 @@
  *= require_tree .
  *= require_self
  */
+.clearfix {
+  clear: both;
+  zoom:1;
+  &:before, &:after {
+    content: "\0020";
+    display: block;
+    height: 0;
+    overflow: hidden;
+  }
+  &:after {
+    clear: both;
+  }
+}
+
+.right {
+  position:relative;
+  float:right;
+}
+
+#flash {
+    border: 1px solid black;
+    display:none;
+  h2 {
+    position:relative;
+    float:left;
+    margin-top:25px;
+  }
+}
+
+#xButton {
+
+}
