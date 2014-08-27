@@ -32,7 +32,8 @@ $(document).ready(function () {
 
   });
 
-  var drawTable = function () {z
+  var drawTable = function () {
+    $("#todo-true").hide();
     $('#table-false').empty();
     $('#table-true').empty();
       for (i = 0; i < todos.todo.length; i++) {
@@ -42,7 +43,8 @@ $(document).ready(function () {
         '</tr>')}else{
           $('#table-true').append('<tr>' +
             '<td id="'+ todos.todo[i].id +'">' + todos.todo[i].name + '</td><td id="todoDelete">X</td><td id="todoUndo">U</td>'  +
-            '</tr>')
+            '</tr>');
+          $('#todo-true').show();
         }
     }
   };
