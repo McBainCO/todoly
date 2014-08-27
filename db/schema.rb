@@ -22,4 +22,4 @@ ActiveRecord::Schema.define(version: 20140827195046) do
   end
 
 end
-git 
+git

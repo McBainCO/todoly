@@ -15,9 +15,12 @@
 //= require_tree .
 
 $(document).ready(function () {
-  var todos = {
-    "todo": [],
-    "superCereal": 0
+
+  var getTodos = function() {
+    var todoJson = $.getJSON("/todos");
+    todoJson.success(function(jsonResponse){
+      drawTable(jsonResponse)
+    });
   };
 
   $('#todo-false').append('<h2>Todo!</h2><div id="flash"></div><table id="table-false"></table><hr>');
@@ -32,17 +35,17 @@ $(document).ready(function () {
 
   });
 
-  var drawTable = function () {
+  var drawTable = function (todoArr) {
     $("#todo-true").hide();
     $('#table-false').empty();
     $('#table-true').empty();
-      for (i = 0; i < todos.todo.length; i++) {
-        if(todos.todo[i].done == false) {
+      for (i = 0; i < todoArr.length; i++) {
+        if(todoArr[i].done == false) {
         $('#table-false').append('<tr>' +
-          '<td id="'+ todos.todo[i].id +'">' + todos.todo[i].name + '</td><td id="todoDelete">X</td><td id="todoComplete">✓</td>'  +
+          '<td id="'+ todoArr[i].id +'">' + todoArr[i].name + '</td><td id="todoDelete">X</td><td id="todoComplete">✓</td>'  +
         '</tr>')}else{
           $('#table-true').append('<tr>' +
-            '<td id="'+ todos.todo[i].id +'">' + todos.todo[i].name + '</td><td id="todoDelete">X</td><td id="todoUndo">U</td>'  +
+            '<td id="'+ todoArr[i].id +'">' + todoArr[i].name + '</td><td id="todoDelete">X</td><td id="todoUndo">U</td>'  +
             '</tr>');
           $('#todo-true').show();
         }
@@ -50,16 +53,13 @@ $(document).ready(function () {
   };
   var addTodo = function () {
     var newTodo = $('#input').val();
-    todos.todo.push(
-      {
-        "id": todos.superCereal,
-        "name": newTodo,
-        "done": false
-      });
-    todos.superCereal++;
-    drawTable();
+    $.ajax({
+      type: "POST",
+      url: "/todos",
+      data: {name: newTodo}
+    })
+      .done(getTodos());
     flashMessage("Todo Created");
-
   };
 
   var flashMessage = function(text) {
@@ -77,37 +77,37 @@ $(document).ready(function () {
 
   $(document).on('click', '#todoDelete', function(){
     var id = $(this).siblings().attr("id");
-    for (i = 0; i < todos.todo.length; i++) {
-      if(id == todos.todo[i].id){
-        todos.todo.splice(i)
-      }
-    }
-    drawTable();
+    $.ajax({
+      type: "DELETE",
+      url: "/todos",
+      data: {id: id}
+    })
+    .done(getTodos());
     flashMessage("Todo Deleted");
   });
 
   $(document).on('click', '#todoComplete', function(){
     var id = $(this).siblings().attr("id");
-    for (i = 0; i < todos.todo.length; i++) {
-      if(id == todos.todo[i].id){
-        todos.todo[i].done = true;
-      }
-    }
-    drawTable();
+    $.ajax({
+      type: "PATCH",
+      url: "/todos",
+      data: {id: id, done: true}
+    })
+      .done(getTodos());
     flashMessage("Todo Completed");
   });
 
   $(document).on('click', '#todoUndo', function(){
     var id = $(this).siblings().attr("id");
-    for (i = 0; i < todos.todo.length; i++) {
-      if(id == todos.todo[i].id){
-        todos.todo[i].done = false;
-      }
-    }
-    drawTable();
+    $.ajax({
+      type: "PATCH",
+      url: "/todos",
+      data: {id: id, done: false}
+    })
+      .done(getTodos());
     flashMessage("Still Todo");
   });
 
+  getTodos()
 
-  drawTable();
 });
